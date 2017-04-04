@@ -1,12 +1,17 @@
+/**********
+　L6470_steppingmotordrive_module 
+　stationery
+********/
+
+
 #include <SPI.h>
 #include <MsTimer2.h>
-//#include <Boards.h>
 #include <stdio.h>
-//#include <math.h>
 #include <SoftwareSerial.h>
 
 SoftwareSerial temp(0, 1); //(rx,tx)
 
+//strblnx-l6470board to arduino-nano pin assigned  
 #define PIN_SPI_MOSI 11
 #define PIN_SPI_MISO 12
 #define PIN_SPI_SCK 13
@@ -14,6 +19,7 @@ SoftwareSerial temp(0, 1); //(rx,tx)
 #define PIN_BUSY 9
 #define OR_SW 17
 
+//global variable
 int InVal;
 int Speed=10;
 unsigned int Dist=20000;
@@ -26,6 +32,7 @@ int Pos=100;
 int last=100;
 unsigned int delt=0;
 
+//setup
 void setup() {
   //Serial for BT start(RN-42 default:9600)
   //※when RN-42 dip_sw No.4:ON = 9600bps
@@ -51,6 +58,7 @@ void setup() {
   Serial.write("init \n");
 }
 
+//main
 void loop() {
   if (temp.available()) {
     InVal = temp.read();
@@ -133,17 +141,19 @@ void loop() {
   }  
 }
 
+//stbrlnx-l6470board-setup
+//
 void L6470_setup() {
-  L6470_setparam_acc(0x8A); //[R, WS] 加速度default 0x08A (12bit) (14.55*val+14.55[step/s^2])
-  L6470_setparam_dec(0x8A); //[R, WS] 減速度default 0x08A (12bit) (14.55*val+14.55[step/s^2])
-  L6470_setparam_maxspeed(0xc0); //[R, WR]最大速度default 0x041 (10bit) (15.25*val+15.25[step/s])
-  L6470_setparam_minspeed(0x01); //[R, WS]最小速度default 0x000 (1+12bit) (0.238*val[step/s])
-  L6470_setparam_fsspd(0x027); //[R, WR]μステップからフルステップへの切替点速度default 0x027 (10bit) (15.25*val+7.63[step/s])
-  L6470_setparam_kvalhold(0x29); //[R, WR]停止時励磁電圧default 0x29 (8bit) (Vs[V]*val/256)
-  L6470_setparam_kvalrun(0x9f); //[R, WR]定速回転時励磁電圧default 0x29 (8bit) (Vs[V]*val/256)
-  L6470_setparam_kvalacc(0x9f); //[R, WR]加速時励磁電圧default 0x29 (8bit) (Vs[V]*val/256)
-  L6470_setparam_kvaldec(0x9f); //[R, WR]減速時励磁電圧default 0x29 (8bit) (Vs[V]*val/256)
-  L6470_setparam_stepmood(0x07); //ステップモードdefault 0x07 (1+3+1+3bit)
+  L6470_setparam_acc(0x8A);       //[R, WS] 加速度default 0x08A (12bit) (14.55*val+14.55[step/s^2])
+  L6470_setparam_dec(0x8A);       //[R, WS] 減速度default 0x08A (12bit) (14.55*val+14.55[step/s^2])
+  L6470_setparam_maxspeed(0xc0);  //[R, WR]最大速度default 0x041 (10bit) (15.25*val+15.25[step/s])
+  L6470_setparam_minspeed(0x01);  //[R, WS]最小速度default 0x000 (1+12bit) (0.238*val[step/s])
+  L6470_setparam_fsspd(0x027);    //[R, WR]μステップからフルステップへの切替点速度default 0x027 (10bit) (15.25*val+7.63[step/s])
+  L6470_setparam_kvalhold(0x29);  //[R, WR]停止時励磁電圧default 0x29 (8bit) (Vs[V]*val/256)
+  L6470_setparam_kvalrun(0x9f);   //[R, WR]定速回転時励磁電圧default 0x29 (8bit) (Vs[V]*val/256)
+  L6470_setparam_kvalacc(0x9f);   //[R, WR]加速時励磁電圧default 0x29 (8bit) (Vs[V]*val/256)
+  L6470_setparam_kvaldec(0x9f);   //[R, WR]減速時励磁電圧default 0x29 (8bit) (Vs[V]*val/256)
+  L6470_setparam_stepmood(0x07);  //ステップモードdefault 0x07 (1+3+1+3bit)
 }
 
 void fulash() {
